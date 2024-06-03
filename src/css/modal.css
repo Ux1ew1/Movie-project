@@ -1,0 +1,12 @@
+@import "../css/style.css";
+
+.pop-up {
+  position: fixed;
+  top: 200px;
+  left: 0;
+  min-width: 40%;
+  min-height: 20%;
+  background-color: var(--dark-blue);
+  color: white;
+  z-index: 1;
+}
