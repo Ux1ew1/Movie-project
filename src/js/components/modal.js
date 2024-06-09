@@ -1,4 +1,5 @@
 import { getData } from "../api/getData";
+import { global } from "../global";
 
 // Находим модальное окно на странице
 const modal = document.querySelector("#modal");
@@ -11,14 +12,22 @@ export const showModalInfo = async (id, cardClassName) => {
   // Получаем информацию о том какая вкладка открыта (фильмы или сериалы)
   const tabActiveDataset =
     document.querySelector(".tabs__btn--active")?.dataset?.tabsPath ?? "N/A";
+  const URLType = global.search.type;
+  console.log("Type:", URLType);
 
   // Получение нужного endpoint
-  switch (tabActiveDataset) {
+  switch ((tabActiveDataset, URLType)) {
     case "movies":
       data = `movie/${id}`; // Если в табах выбрана вкладка с фильмами, то записываем в переменную endpoint для получения информации об фильме
       break;
+    case "movie": // Проверка на категорию при поиске фильма
+      data = `movie/${id}`;
+      break;
     case "shows":
       data = cardClassName === "list-item-link" ? `tv/${id}` : `movie/${id}`; // Если выбрана вкладка с сериалами, то передаём endpoint для получения информации об сериале. Но если клик был по фильму из слайдера, то передаём endpoint для получения информации об фильме.
+      break;
+    case "tv": // Проверка на категорию при поиске сериала
+      data = `tv/${id}`;
       break;
     default:
       data = `movie/${id}`; // По умолчанию передаём endpoint для фильмов
@@ -29,7 +38,8 @@ export const showModalInfo = async (id, cardClassName) => {
   const { title, poster_path, overview, vote_average, name } = await getData(
     data
   );
-  const result = await getData(data);
+
+  console.log(title);
 
   // Рисуем шаблон с информацией для модального окна
   const template = `
